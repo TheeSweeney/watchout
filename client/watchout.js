@@ -107,7 +107,9 @@ Player.prototype.render = function(to) {
 }
 
 var players = [];
-players.push(new Player().render(gameBoard));
+var newPlayer = new Player();
+newPlayer.render(gameBoard)
+players.push(newPlayer);
 
 
 // enemy code
@@ -136,8 +138,41 @@ function render(enemyData) {
   // collision logic
 
   function checkCollision(enemy, collidedCallback) {
+    players.forEach(function(player) {
+      var radiusSum = parseFloat(enemy.attr('r')) + player.r;
+      var xDiff = parseFloat(enemy.attr('cx')) - player.x;
+      var yDiff = parseFloat(enemy.attr('cy')) - player.y;
+
+      var seperation = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+      if (seperation < radiusSum) collidedCallback(player, enemy);
+    });
+  }
+
+  function onCollision(){
+    updateHighScore();
+    gameStats.currentScore = 0;
+    updateScore();
+  }
+
+  function tweenWithCollisionDetection(endData) {
+    var enemy = d3.select(this);
+
+    var startPos = {x: parseFloat(enemy.attr('cx')),
+                    y: parseFloat(enemy.attr('cy'))
+                   };
+
+    var endPos = {x: axes.x(endData.x), y: axes.y(endData.y)};
+
+    return function(t) {
+      checkCollision(enemy, onCollision);
+      var enemyNextPos = {x: startPos.x + (endPos.x - startPos.x)*t,
+                          y: startPos.y + (endPos.y - startPos.y)*t
+                         };
+      enemy.attr('cx', enemyNextPos.x).attr('cy', enemyNextPos.y);
+    }
 
   }
+
 
 
   // render enemies on screen
