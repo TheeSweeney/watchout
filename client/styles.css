@@ -11,3 +11,11 @@ Feel free to use it if you like. */
 svg{
   background-color: teal;
 }
+
+body {
+  background-image: url(http://latentflip.com/LearningD3/collider/bo_play.png)
+}
+
+.scoreboard{
+  color: white;
+}

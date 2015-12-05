@@ -38,6 +38,78 @@ function updateHighScore() {
 }
 
 
+// Player Code
+// ***********
+
+function Player() {
+  this.path = 'm-7.5,1.62413c0,-5.04095 4.08318,-9.12413 9.12414,-9.12413c5.04096,0 9.70345,5.53145 11.87586,9.12413c-2.02759,2.72372 -6.8349,9.12415 -11.87586,9.12415c-5.04096,0 -9.12414,-4.08318 -9.12414,-9.12415z';
+  this.fill = '#ff6600';
+  this.x = 0;
+  this.y = 0; 
+  this.angle = 0;
+  this.r = 5;
+  this.el = undefined;
+
+
+}
+
+Player.prototype.transform = function(opts) {
+  //this.angle = opts.angle || this.angle;
+  this.setX( opts.x || this.x );
+  this.setY( opts.y || this.y );
+  // this.el.attr('transform', "rotate(#{},#{@getX()},#{@getY()}) "+
+  //     "translate(#{@getX()},#{@getY()})")
+}
+
+Player.prototype.moveAbsolute = function(x, y){
+  this.transform({x: x, y: y});
+}
+
+Player.prototype.moveRelative = function(dx, dy){
+  this.transform({x: this.x + dx, y: this.y + dy});
+}
+
+Player.prototype.setupDragging = function() {
+  var dragMove = function() {
+    this.moveRelative(d3.event.dx, d3.event.dy);
+  }.bind(this);
+  var drag = d3.behavior.drag()
+              .on('drag', dragMove);
+
+  this.el.call(drag); // D3 magic
+}
+
+Player.prototype.setX = function(x) {
+  var minX = gameOptions.padding;
+  var maxX = gameOptions.width - gameOptions.padding;
+  x = (x <= minX) ? x : minX;
+  x = (x >= maxX) ? x : maxX;
+  this.x = x;
+}
+
+Player.prototype.setY = function(y) {
+  var minY = gameOptions.padding;
+  var maxY = gameOptions.width - gameOptions.padding;
+  y = (y <= minY) ? y : minY;
+  y = (y >= maxY) ? y : maxY;
+  this.y = y;
+}
+
+Player.prototype.render = function(to) {
+  this.el = to.append('svg:path')
+            .attr('d', this.path)
+            .attr('fill', this.fill);
+
+  this.transform({x: gameOptions.width * 0.5,
+                  y: gameOptions.height * 0.5});
+
+  this.setupDragging(); 
+}
+
+var players = [];
+players.push(new Player().render(gameBoard));
+
+
 // enemy code
 function createEnemies() {
   var enemies = [];
@@ -63,9 +135,9 @@ function render(enemyData) {
 
   // collision logic
 
-  // function checkCollision(enemy, collidedCallback) {
+  function checkCollision(enemy, collidedCallback) {
 
-  // }
+  }
 
 
   // render enemies on screen
