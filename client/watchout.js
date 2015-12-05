@@ -25,7 +25,7 @@ var gameBoard = d3.select('.board').append('svg:svg')
 
 function updateScore() {
   d3.select('.current')
-    .text(gameStats.currentScore.toString());
+    .text("Score:" + gameStats.currentScore.toString());
 }
 
 function increaseScore() {
@@ -35,11 +35,11 @@ function increaseScore() {
 
 function updateHighScore() {
   gameStats.highScore = Math.max(gameStats.highScore, gameStats.currentScore);
-  d3.select('.highscore').text(gameStats.highScore.toString());
+  d3.select('.highscore').text("High score:" + gameStats.highScore.toString());
 }
 
 function updateCollisions(){
-  d3.select('.collisions').text(gameStats.collisionCount.toString())
+  d3.select('.collisions').text("Health:" + ((100-gameStats.collisionCount)).toString() + " %")
 }
 
 
@@ -137,6 +137,12 @@ function render(enemyData) {
     gameStats.currentScore = 0;
     updateScore();
     gameStats.collisionCount++;
+    if (gameStats.collisionCount > 100){
+      gameStats.collisionCount = 0;
+      d3.selectAll(".enemy").data([]).exit().remove();
+      
+
+    }
     updateCollisions();
   }
 
@@ -168,7 +174,7 @@ function render(enemyData) {
       .duration(100)
       .attr('r', 10)
     .transition()
-      .duration(5000)
+      .duration(2000)
       .tween('custom', tweenWithCollisionDetection);
 }
 
@@ -181,7 +187,7 @@ function play() {
   }
 
   gameTurn();
-  setInterval(gameTurn, 5000);
+  setInterval(gameTurn, 2000);
   setInterval(function() { increaseScore(); }, 50);
 
 }
