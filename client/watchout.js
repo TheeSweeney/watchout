@@ -57,6 +57,7 @@ Player.prototype.transform = function(opts) {
   //this.angle = opts.angle || this.angle;
   this.setX( opts.x || this.x );
   this.setY( opts.y || this.y );
+  console.log(this.x, opts.x);
   // this.el.attr('transform', "rotate(#{},#{@getX()},#{@getY()}) "+
   //     "translate(#{@getX()},#{@getY()})")
 }
@@ -66,12 +67,14 @@ Player.prototype.moveAbsolute = function(x, y){
 }
 
 Player.prototype.moveRelative = function(dx, dy){
+  //console.log(dx, dy);
   this.transform({x: this.x + dx, y: this.y + dy});
 }
 
 Player.prototype.setupDragging = function() {
   var dragMove = function() {
-    this.moveRelative(d3.event.dx, d3.event.dy);
+    //console.log(d3.event.dx, d3.event.dy);
+    this.moveRelative.call(this, d3.event.dx, d3.event.dy);
   }.bind(this);
   var drag = d3.behavior.drag()
               .on('drag', dragMove);
@@ -82,8 +85,8 @@ Player.prototype.setupDragging = function() {
 Player.prototype.setX = function(x) {
   var minX = gameOptions.padding;
   var maxX = gameOptions.width - gameOptions.padding;
-  x = (x <= minX) ? x : minX;
-  x = (x >= maxX) ? x : maxX;
+  x = (x >= minX) ? x : minX;
+  x = (x <= maxX) ? x : maxX;
   this.x = x;
 }
 
