@@ -4,6 +4,9 @@
 Feel free to use it if you like. */
 
 .gameBoard {
+    margin: 0 auto;
+    width: 700px;
+    display: block;
     border:1px solid #ccc;
 }
 

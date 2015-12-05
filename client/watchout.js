@@ -57,9 +57,11 @@ Player.prototype.transform = function(opts) {
   //this.angle = opts.angle || this.angle;
   this.setX( opts.x || this.x );
   this.setY( opts.y || this.y );
-  console.log(this.x, opts.x);
-  // this.el.attr('transform', "rotate(#{},#{@getX()},#{@getY()}) "+
-  //     "translate(#{@getX()},#{@getY()})")
+  console.log(this.x, this.y);
+  //"rotate(#{},#{@x},#{@getY()}) "
+  // var translateString = "translate("+this.x+","+this.y+")";
+  // this.el.attr('transform', translateString);
+  this.el.attr('transform', ("translate(" + (this.x) + "," + this.y + ")"));
 }
 
 Player.prototype.moveAbsolute = function(x, y){
